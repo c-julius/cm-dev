@@ -1,0 +1,60 @@
+services:
+    web:
+        image: nginx:alpine
+        volumes:
+            - "./etc/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+            - "./frontend/dist:/var/www/static"
+        ports:
+            - "${WEB_PORT}:80"
+        restart: always
+        depends_on:
+            - app
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile.php
+        restart: always
+        volumes:
+            - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php-custom.ini"
+            - "./backend:/var/www/html"
+            - "./frontend:/frontend"
+        depends_on:
+            - db
+        secrets:
+            - db_password
+        environment:
+            - DB_PASSWORD_FILE=/run/secrets/db_password
+        entrypoint: ["/usr/local/bin/entrypoint.sh"]
+        command: ["php-fpm"]
+    cypress:
+        image: cypress/included:14.4.0
+        entrypoint: "/entrypoint.sh"
+        environment:
+            # pass base url to test pointing at the web application
+            - CYPRESS_baseUrl=http://web:80
+            - DISPLAY=:0
+        working_dir: /e2e
+        volumes:
+            - "./cypress-tests:/e2e"
+            - "./docker-cypress-entrypoint.sh:/entrypoint.sh"
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        depends_on:
+            - web
+        tty: true
+        command: ["bash"]
+    db:
+        image: mysql:${MYSQL_VERSION}
+        restart: always
+        env_file:
+            - ".env"
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_RANDOM_ROOT_PASSWORD=yes
+            - MYSQL_PASSWORD_FILE=/run/secrets/db_password
+        volumes:
+            - "./data/db/mysql:/var/lib/mysql"
+            - "./secrets/db_password:/run/secrets/db_password:ro"
+secrets:
+    db_password:
+        file: ./secrets/db_password

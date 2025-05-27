@@ -1,0 +1,9 @@
+[submodule "backend"]
+	path = backend
+	url = git@github.com:c-julius/cm-backend.git
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:c-julius/cm-frontend.git
+[submodule "cypress-tests"]
+	path = cypress-tests
+	url = git@github.com:c-julius/cm-cypress-tests.git
