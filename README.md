@@ -50,7 +50,7 @@ cd cm-dev
   ```
 
 ### 4. Frontend Setup
-- The frontend is served via Docker Compose and proxies API requests to the backend.
+- The frontend is built via Docker Compose.
 - No manual steps needed if using Docker Compose.
 - For local dev (optional):
   ```bash
@@ -84,3 +84,17 @@ cd cm-dev
 - All API endpoints are under `/api`.
 - Use the provided seeders for demo data.
 - For troubleshooting, check logs in the respective containers.
+
+## Screenshots
+
+### Dashboard
+![Dashboard Screenshot](/screenshots/Dashboard.png)
+### Company Management
+![Company Management Screenshot](/screenshots/Companies.png)
+### Company View
+![Company View Screenshot](/screenshots/CompanyView.png)
+### Headless Cypress Test Run
+![Cypress Headless Screenshot](/screenshots/HeadlessTests.png)
+### Cypress GUI Test Run
+![Cypress GUI Screenshot](/screenshots/InteractiveTests.png)
+![Cypress GUI Screenshot 2](/screenshots/Tests.png)
